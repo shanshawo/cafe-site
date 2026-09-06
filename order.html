@@ -14,7 +14,7 @@
   <header class="site-header">
     <div class="wrap header-inner">
       <a href="index.html" class="logo">Mud &amp; Smoke</a>
-      <nav class="nav">
+      <nav class="nav" id="siteNav" aria-label="Main navigation">
         <a href="index.html#menu">Menu</a>
         <a href="order.html" class="active">Order</a>
         <a href="index.html#story">Story</a>
@@ -27,6 +27,9 @@
             <path d="M9 10V6a3 3 0 0 1 6 0v4" />
           </svg>
           <span class="cart-badge" id="cartBadge" hidden>0</span>
+        </button>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">
+          <span></span><span></span><span></span>
         </button>
       </div>
     </div>

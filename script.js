@@ -51,6 +51,25 @@
     }, 0);
   }
 
+  // ---- mobile nav toggle ----
+  var navToggle = document.getElementById("navToggle");
+  var siteNav = document.getElementById("siteNav");
+  if (navToggle && siteNav) {
+    navToggle.addEventListener("click", function () {
+      var open = siteNav.classList.toggle("open");
+      navToggle.classList.toggle("open", open);
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    // Close menu when a link is tapped
+    siteNav.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", function () {
+        siteNav.classList.remove("open");
+        navToggle.classList.remove("open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+
   // ---- cart button (header) ----
   var cartBtn = document.getElementById("cartBtn");
   var cartBadge = document.getElementById("cartBadge");

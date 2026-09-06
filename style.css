@@ -50,13 +50,34 @@ body {
   letter-spacing: -0.01em;
 }
 .nav { display: flex; gap: 28px; }
-.nav a {
-  color: var(--ink-soft);
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
+.nav a { color: var(--ink-soft); text-decoration: none; font-size: 0.95rem; font-weight: 500; }
 .nav a:hover { color: var(--ember); }
+.nav a.active { color: var(--ember); }
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  align-items: center;
+  margin-left: 8px;
+}
+.nav-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--espresso);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 .nav-cta {
   color: var(--cream) !important;
   background: var(--espresso);
@@ -489,9 +510,28 @@ body {
   .menu-grid, .find-grid { grid-template-columns: 1fr; gap: 28px; }
   .story-grid { grid-template-columns: 1fr; gap: 24px; }
   .hero { padding: 90px 0 80px; }
-  .nav { gap: 12px; }
-  .nav-cta { display: none; }
-  .nav a { font-size: 0.82rem; }
+  .nav {
+    position: fixed;
+    top: 68px;
+    left: 12px;
+    right: 12px;
+    flex-direction: column;
+    gap: 4px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 12px 32px rgba(42, 29, 19, 0.14);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 80;
+  }
+  .nav.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .nav a { font-size: 0.95rem; padding: 12px 14px; border-radius: 10px; white-space: nowrap; }
+  .nav a:hover { background: var(--cream); }
+  .nav-toggle { display: flex; }
   .logo { font-size: 1.05rem; }
   .section { padding: 72px 0; }
 }
