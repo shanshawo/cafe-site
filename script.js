@@ -3,7 +3,7 @@
   "use strict";
 
   // The number orders go to (placeholder — owner swaps in real number)
-  var WA_NUMBER = "919876543210";
+  var WA_NUMBER = "XXXXXXXXXXX"; // placeholder — owner will put his real number
   var CART_KEY = "mudsmoke_cart";
 
   var MENU = {

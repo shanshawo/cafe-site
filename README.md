@@ -24,7 +24,7 @@ A warm, cozy single-page café site with a working order cart that sends orders 
 Edit `script.js`, top of file:
 
 ```js
-var WA_NUMBER = "919876543210"; // replace with the real number, country code first, no +
+var WA_NUMBER = "XXXXXXXXXXX"; // replace with your real number, country code first, no +
 ```
 
 Also update the `wa.me` links in `index.html` (hero button + contact card) and the `tel:` link.
