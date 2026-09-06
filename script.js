@@ -1,4 +1,4 @@
-// Mud & Smoke — cart + WhatsApp order
+// Mud & Smoke — cart + WhatsApp order (shared across pages)
 (function () {
   "use strict";
 
@@ -6,7 +6,6 @@
   var WA_NUMBER = "919876543210";
   var CART_KEY = "mudsmoke_cart";
 
-  // Item data: id -> { name, price }
   var MENU = {
     espresso: { name: "Espresso", price: 120 },
     americano: { name: "Americano", price: 150 },
@@ -37,9 +36,7 @@
   function saveCart() {
     try {
       localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    } catch (e) {
-      // private mode or storage blocked; cart still works in memory
-    }
+    } catch (e) {}
   }
 
   function cartCount() {
@@ -54,7 +51,69 @@
     }, 0);
   }
 
-  // ---- rendering ----
+  // ---- cart button (header) ----
+  var cartBtn = document.getElementById("cartBtn");
+  var cartBadge = document.getElementById("cartBadge");
+
+  function updateBadge() {
+    var n = cartCount();
+    if (cartBadge) {
+      if (n > 0) {
+        cartBadge.textContent = n;
+        cartBadge.hidden = false;
+      } else {
+        cartBadge.hidden = true;
+      }
+    }
+  }
+  updateBadge();
+
+  // ---- toast ----
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+
+  function showToast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toastEl.classList.remove("show");
+      toastEl.hidden = true;
+    }, 1800);
+  }
+
+  // ---- Add buttons (on order page) ----
+  document.querySelectorAll(".add-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var card = btn.closest(".product-card");
+      var id;
+      if (card) {
+        id = card.getAttribute("data-id");
+      } else {
+        var li = btn.closest(".menu-item");
+        if (li) id = li.getAttribute("data-id");
+      }
+      if (!id || !MENU[id]) return;
+      cart[id] = (cart[id] || 0) + 1;
+      saveCart();
+      updateBadge();
+      showToast(MENU[id].name + " added to your order");
+      flashAdded(btn);
+    });
+  });
+
+  function flashAdded(btn) {
+    btn.textContent = "✓";
+    btn.classList.add("added");
+    setTimeout(function () {
+      btn.textContent = "+";
+      btn.classList.remove("added");
+    }, 900);
+  }
+
+  // ---- Cart drawer ----
   var drawer = document.getElementById("cartDrawer");
   var overlay = document.getElementById("cartOverlay");
   var itemsEl = document.getElementById("cartItems");
@@ -62,6 +121,7 @@
   var orderBtn = document.getElementById("cartOrderBtn");
 
   function openCart() {
+    if (!drawer) return;
     drawer.setAttribute("aria-hidden", "false");
     drawer.classList.add("open");
     overlay.hidden = false;
@@ -70,6 +130,7 @@
   }
 
   function closeCart() {
+    if (!drawer) return;
     drawer.setAttribute("aria-hidden", "true");
     drawer.classList.remove("open");
     overlay.hidden = true;
@@ -77,10 +138,11 @@
   }
 
   function renderCart() {
+    if (!itemsEl) return;
     var ids = Object.keys(cart);
     if (ids.length === 0) {
       itemsEl.innerHTML =
-        '<p class="cart-empty">Nothing here yet. Add something from the menu.</p>';
+        '<p class="cart-empty">Nothing here yet. Add something from the order page.</p>';
     } else {
       var html = "";
       ids.forEach(function (id) {
@@ -105,30 +167,11 @@
     orderBtn.disabled = ids.length === 0;
   }
 
-  // Add from menu
-  document.querySelectorAll(".add-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var li = btn.closest(".menu-item");
-      if (!li) return;
-      var id = li.getAttribute("data-id");
-      if (!MENU[id]) return;
-      cart[id] = (cart[id] || 0) + 1;
-      saveCart();
-      flashAdded(btn);
-      openCart();
-    });
-  });
+  if (cartBtn) cartBtn.addEventListener("click", openCart);
+  if (overlay) overlay.addEventListener("click", closeCart);
+  var cartClose = document.getElementById("cartClose");
+  if (cartClose) cartClose.addEventListener("click", closeCart);
 
-  function flashAdded(btn) {
-    btn.textContent = "✓";
-    btn.classList.add("added");
-    setTimeout(function () {
-      btn.textContent = "+";
-      btn.classList.remove("added");
-    }, 900);
-  }
-
-  // Quantity buttons inside the cart
   itemsEl.addEventListener("click", function (e) {
     var btn = e.target.closest(".qty-btn");
     if (!btn) return;
@@ -138,39 +181,31 @@
     cart[id] = (cart[id] || 0) + delta;
     if (cart[id] <= 0) delete cart[id];
     saveCart();
+    updateBadge();
     renderCart();
   });
 
-  // Open / close
-  document.querySelectorAll(".add-btn").forEach(function () {});
-  overlay.addEventListener("click", closeCart);
-  document.getElementById("cartClose").addEventListener("click", closeCart);
-
-  // GitHub release note: this is where the cart opens on add
-  // (kept open so people see their order build up)
-
-  // WhatsApp order
-  orderBtn.addEventListener("click", function () {
-    var ids = Object.keys(cart);
-    if (ids.length === 0) return;
-    var lines = ids.map(function (id) {
-      var item = MENU[id];
-      var qty = cart[id];
-      var lineTotal = item.price * qty;
-      return qty + " x " + item.name + " = ₹" + lineTotal;
+  // ---- WhatsApp order ----
+  if (orderBtn) {
+    orderBtn.addEventListener("click", function () {
+      var ids = Object.keys(cart);
+      if (ids.length === 0) return;
+      var lines = ids.map(function (id) {
+        var item = MENU[id];
+        var qty = cart[id];
+        return qty + " x " + item.name + " = ₹" + item.price * qty;
+      });
+      var msg =
+        "Hi Mud & Smoke! I'd like to order:\n\n" +
+        lines.join("\n") +
+        "\n\nTOTAL: ₹" + cartTotal() +
+        "\n\nName: \nPhone: \nPickup or delivery?";
+      var url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+      window.open(url, "_blank");
     });
-    var total = "TOTAL: ₹" + cartTotal();
-    var msg =
-      "Hi Mud & Smoke! I'd like to order:\n\n" +
-      lines.join("\n") +
-      "\n\n" +
-      total +
-      "\n\nName: \nPhone: \nPickup or delivery?";
-    var url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
-    window.open(url, "_blank");
-  });
+  }
 
-  // Map button (kept from before)
+  // ---- Map button (homepage only) ----
   var mapBtn = document.getElementById("map-btn");
   if (mapBtn) {
     mapBtn.addEventListener("click", function (e) {
