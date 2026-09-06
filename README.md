@@ -1,44 +1,39 @@
-# Mud & Smoke — Café Website
+# ☕ Café Website Demo — Mud & Smoke
 
-A warm, cozy single-page café site with a working order cart that sends orders to WhatsApp. Built as a demo site by Shanshawo (Harsh).
+**A complete café website with online ordering — built as a demo by Shanshawo.**
 
-## Features
+This is a live, working example of a restaurant / café website: a customer browses the menu, adds items to a cart, and sends the order straight to WhatsApp. If you own a café, restaurant, or any food business — this is exactly the kind of site you can have for yours.
 
-- Sticky nav + hero with "no rush" vibe
-- Full menu (coffee, food, evenings) with ₹ INR prices
-- **Cart system** — add items with the + button, adjust quantities, live total
-- **WhatsApp ordering** — "Order on WhatsApp" opens a chat with the full order list + total preloaded, customer just hits send
-- Call / email / Google Maps links
-- Mobile responsive, warm cream + espresso + ember palette
-- Fraunces serif + Inter sans (Google Fonts)
+## 🖥️ Live demo
 
-## Files
+> **[smokecart.netlify.app](https://smokecart.netlify.app/)** — live, hosted on Netlify
 
-- `index.html` — structure & content
-- `style.css` — all styling
-- `script.js` — cart logic + WhatsApp order
+Click through it on your phone: add a coffee to the cart, open the cart, hit "Order on WhatsApp" and watch the full order arrive as a message.
 
-## Customize
+## ✨ What this demo shows
 
-### Change the WhatsApp order number
-Edit `script.js`, top of file:
+- **Menu with real prices** — coffee, food, evening items, in ₹
+- **Cart system** — customers add items, change quantities, see the live total
+- **WhatsApp ordering** — "Order on WhatsApp" opens a chat with the whole order + total preloaded. No app, no payment gateway, works for everyone
+- **Mobile friendly** — looks great and works smoothly on any phone
+- **Clean, warm design** — cozy café branding, custom typography, fully responsive
 
-```js
-var WA_NUMBER = "XXXXXXXXXXX"; // replace with your real number, country code first, no +
-```
+## 💼 What I can build for you
 
-Also update the `wa.me` links in `index.html` (hero button + contact card) and the `tel:` link.
+- Café / restaurant sites with online ordering
+- Business, portfolio, and personal websites
+- Custom designs to match your brand
+- Mobile-first, fast, and easy to update
 
-### Change email / address / hours
-All in `index.html` → "Find us" section.
+## 📩 Contact
 
-## Deploy on Netlify (free)
+Want a website like this for your business? Let's talk.
 
-1. Push this folder to a GitHub repo
-2. Netlify → "Add new site" → "Import an existing project" → pick the repo
-3. Build command: leave empty · Publish directory: leave empty (it's a static site)
-4. Deploy. Done.
+- **Email:** [rldarkshan@gmail.com](mailto:rldarkshan@gmail.com)
+- **GitHub:** [github.com/shanshawo](https://github.com/shanshawo)
 
-Live demo preview (local): run `python3 -m http.server 8765` in this folder.
+---
 
-© 2026 Shanshawo — Built for demo. Site by Shanshawo.
+*This is a demo project. The café in it is fictional — made to show what a real one could look like. Built with HTML, CSS, and JavaScript.*
+
+© 2026 Shanshawo
